@@ -1,6 +1,9 @@
 // --- QUOTES ARRAY ---
 let quotes = [];
 
+// --- MOCK SERVER URL ---
+const SERVER_URL = "https://jsonplaceholder.typicode.com/posts";
+
 // --- LOAD QUOTES FROM LOCAL STORAGE ---
 function loadQuotes() {
   const storedQuotes = localStorage.getItem('quotes');
@@ -106,18 +109,54 @@ function importFromJsonFile(event) {
   fileReader.readAsText(event.target.files[0]);
 }
 
+// --- SERVER SYNC & CONFLICT RESOLUTION ---
+async function fetchServerQuotes() {
+  try {
+    const response = await fetch(SERVER_URL);
+    const serverData = await response.json();
+    
+    // Simulate server quotes
+    const serverQuotes = serverData.slice(0, 5).map(item => ({
+      text: item.title,
+      category: "ServerQuote"
+    }));
+
+    resolveConflicts(serverQuotes);
+  } catch (err) {
+    console.error("Failed to fetch server data:", err);
+  }
+}
+
+function resolveConflicts(serverQuotes) {
+  // Server data takes precedence; add only new quotes
+  serverQuotes.forEach(sq => {
+    const exists = quotes.some(q => q.text === sq.text && q.category === sq.category);
+    if (!exists) {
+      quotes.push(sq);
+    }
+  });
+
+  saveQuotes();
+  populateCategories();
+  filterQuotes();
+
+  alert("Quotes synced with server. Any new quotes from the server have been added.");
+}
+
 // --- EVENT LISTENERS ---
 document.getElementById('newQuote').addEventListener('click', filterQuotes);
 document.getElementById('addQuoteBtn').addEventListener('click', addQuote);
 document.getElementById('exportBtn').addEventListener('click', exportQuotes);
 document.getElementById('importFile').addEventListener('change', importFromJsonFile);
 document.getElementById('categoryFilter').addEventListener('change', filterQuotes);
+document.getElementById('syncBtn').addEventListener('click', fetchServerQuotes);
 
 // --- INITIALIZE ---
 loadQuotes();
 populateCategories();
-
 const lastCategory = localStorage.getItem('lastSelectedCategory') || 'all';
 document.getElementById('categoryFilter').value = lastCategory;
-
 filterQuotes();
+
+// --- AUTOMATIC SERVER SYNC EVERY 30 SECONDS ---
+setInterval(fetchServerQuotes, 30000);
