@@ -1,45 +1,37 @@
-// Initial array of quote objects
-const quotes = [
-  { text: "The best way to predict the future is to create it.", category: "Motivation" },
-  { text: "In the middle of every difficulty lies opportunity.", category: "Inspiration" },
-  { text: "Code is like humor. When you have to explain it, it’s bad.", category: "Programming" },
-  { text: "Simplicity is the soul of efficiency.", category: "Design" }
+// Check for the existence of the quotes array with text and category properties
+let quotes = [
+  { text: "Success is not final; failure is not fatal.", category: "Motivation" },
+  { text: "Dream big and dare to fail.", category: "Inspiration" },
+  { text: "The best way to predict the future is to create it.", category: "Wisdom" }
 ];
 
-// Display random quote
-function showRandomQuote() {
+// Check for the displayRandomQuote function
+function displayRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const randomQuote = quotes[randomIndex];
-  const quoteDisplay = document.getElementById('quoteDisplay');
   
-  quoteDisplay.innerHTML = `
-    <p>"${randomQuote.text}"</p>
-    <em>— ${randomQuote.category}</em>
-  `;
+  // Check for logic to select a random quote and update the DOM
+  const quoteDisplay = document.getElementById("quoteDisplay");
+  quoteDisplay.textContent = `"${randomQuote.text}" — ${randomQuote.category}`;
 }
 
-// Add new quote dynamically
+// Check for the addQuote function
 function addQuote() {
-  const newText = document.getElementById('newQuoteText').value.trim();
-  const newCategory = document.getElementById('newQuoteCategory').value.trim();
+  const quoteText = document.getElementById("quoteText").value.trim();
+  const quoteCategory = document.getElementById("quoteCategory").value.trim();
 
-  if (!newText || !newCategory) {
-    alert('Please enter both a quote and a category!');
-    return;
+  // Check for logic to add a new quote and update DOM
+  if (quoteText && quoteCategory) {
+    quotes.push({ text: quoteText, category: quoteCategory });
+    document.getElementById("quoteText").value = "";
+    document.getElementById("quoteCategory").value = "";
+    displayRandomQuote();
   }
-
-  // Create new quote object and push to array
-  const newQuote = { text: newText, category: newCategory };
-  quotes.push(newQuote);
-
-  // Clear input fields
-  document.getElementById('newQuoteText').value = '';
-  document.getElementById('newQuoteCategory').value = '';
-
-  alert('New quote added successfully!');
-  showRandomQuote(); // Immediately show the new quote
 }
 
-// Add event listeners
-document.getElementById('newQuote').addEventListener('click', showRandomQuote);
-document.getElementById('addQuoteBtn').addEventListener('click', addQuote);
+// Check for event listener on the “Show New Quote” button
+document.getElementById("newQuoteBtn").addEventListener("click", displayRandomQuote);
+document.getElementById("addQuoteBtn").addEventListener("click", addQuote);
+
+// Display a quote when page loads
+displayRandomQuote();
