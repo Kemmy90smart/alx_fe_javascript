@@ -9,9 +9,17 @@
 <body>
   <h1>Dynamic Quote Generator</h1>
 
+  <!-- CATEGORY FILTER -->
+  <h2>Filter by Category</h2>
+  <select id="categoryDropdown">
+    <option value="all">All</option>
+  </select>
+
+  <!-- QUOTE DISPLAY -->
   <div id="quoteDisplay" class="quote-display"></div>
   <button id="newQuote">Show New Quote</button>
 
+  <!-- ADD NEW QUOTE -->
   <h2>Add a New Quote</h2>
   <div id="addQuoteForm">
     <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
@@ -19,6 +27,7 @@
     <button id="addQuoteBtn">Add Quote</button>
   </div>
 
+  <!-- IMPORT / EXPORT -->
   <h2>Import / Export Quotes</h2>
   <button id="exportBtn">Export Quotes as JSON</button>
   <input type="file" id="importFile" accept=".json">
